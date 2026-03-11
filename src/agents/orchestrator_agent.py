@@ -17,7 +17,7 @@ import httpx
 from typing import Dict, Optional
 from azure.core.credentials import AzureKeyCredential, AccessToken
 from azure.identity.aio import AzureCliCredential, ManagedIdentityCredential
-from agent_framework import ChatAgent, MCPStreamableHTTPTool
+from agent_framework import Agent, MCPStreamableHTTPTool
 from agent_framework.azure import AzureOpenAIChatClient
 
 logger = structlog.get_logger()
@@ -125,7 +125,7 @@ class GeoBoxOrchestrator:
                        client_type="AzureOpenAIChatClient",
                        using_api_key=bool(api_key))
 
-            self.agent = ChatAgent(
+            self.agent = Agent(
                 chat_client,
                 self._get_agent_instructions(),
                 name="GeoBoxOrchestrator",
