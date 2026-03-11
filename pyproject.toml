@@ -1,0 +1,33 @@
+[project]
+name = "geo-box-azure-hackathon"
+version = "1.0.0"
+description = "AI-Powered Geospatial Metadata Intelligence for Box"
+requires-python = ">=3.11"
+dependencies = [
+    # Web framework
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.3",
+    "pydantic-settings>=2.5.2",
+    # Azure SDKs
+    "azure-identity>=1.15.0",
+    "openai>=1.40.0",
+    # Box SDK v10+
+    "box-sdk-gen>=1.0.0",
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "python-multipart>=0.0.9",
+    "aiofiles>=23.2.1",
+    # Logging
+    "structlog>=24.1.0",
+    # Multi-Agent & MCP
+    "agent-framework>=1.0.0b1",
+    "mcp>=1.0.0",
+    "httpx>=0.24.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]

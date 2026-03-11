@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Box credentials
+config/box_config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+*.log
+
+# Container volumes
+.podman/
+
+# Azure
+*.azurePubxml
+*.publishsettings
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/

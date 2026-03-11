@@ -1,0 +1,35 @@
+# Containerfile for ExifTool MCP Server
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install ExifTool system dependency
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libimage-exiftool-perl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Verify ExifTool installation
+RUN exiftool -ver && echo "ExifTool installed successfully"
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy MCP server code
+COPY . .
+
+# Expose port (if running as HTTP server)
+# MCP can run over stdio or HTTP - we'll use stdio by default
+EXPOSE 8081
+
+# Health check (optional, for HTTP mode)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import subprocess; subprocess.run(['exiftool', '-ver'], check=True)" || exit 1
+
+# Run the SSE server (for Agent Framework MCP integration)
+# Use sse_server.py for proper MCP protocol over SSE
+CMD ["python", "sse_server.py"]

@@ -1,0 +1,28 @@
+# GeoBox Dependencies
+
+# Web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.3
+pydantic-settings>=2.5.2
+
+# Azure SDKs
+azure-identity>=1.15.0
+openai>=1.40.0  # Azure OpenAI
+
+# Box SDK v10+ (generated SDK)
+box-sdk-gen>=1.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+python-multipart>=0.0.9
+aiofiles>=23.2.1
+
+# Logging and monitoring
+structlog>=24.1.0
+
+# Multi-Agent & MCP
+agent-framework>=1.0.0b1  # Microsoft Agent Framework SDK (beta)
+opentelemetry-semantic-conventions-ai>=0.4.13,<0.4.14  # Pinned — 0.4.14 breaks agent-framework
+mcp>=1.0.0  # Model Context Protocol Python SDK
+httpx>=0.24.0  # HTTP client (for MCP StreamableHTTP)

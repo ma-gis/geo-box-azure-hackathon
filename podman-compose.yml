@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  mcp-exiftool:
+    build:
+      context: ./src/mcp_servers/exiftool_server
+      dockerfile: Containerfile
+    image: exiftool-mcp:latest
+    container_name: geobox-mcp-exiftool-dev
+    ports:
+      - "8081:8081"
+    environment:
+      - LOG_LEVEL=INFO
+    volumes:
+      - geobox-tmp:/tmp/geobox
+    networks:
+      - geobox-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  mcp-geo:
+    build:
+      context: ./src/mcp_servers/geo_server
+      dockerfile: Containerfile
+    image: geo-mcp:latest
+    container_name: geobox-mcp-geo-dev
+    ports:
+      - "8082:8082"
+    environment:
+      - LOG_LEVEL=INFO
+    networks:
+      - geobox-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8082/health', timeout=3).raise_for_status()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: geobox:latest
+    container_name: geobox-orchestrator-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - MCP_EXIFTOOL_URL=http://mcp-exiftool:8081/sse
+      - GEO_SERVER_URL=http://mcp-geo:8082
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-4o}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config:/app/config:Z
+      - geobox-tmp:/tmp/geobox
+    depends_on:
+      mcp-exiftool:
+        condition: service_healthy
+      mcp-geo:
+        condition: service_healthy
+    networks:
+      - geobox-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+networks:
+  geobox-network:
+    driver: bridge
+
+volumes:
+  geobox-tmp:
+    driver: local
