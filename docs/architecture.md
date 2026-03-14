@@ -14,27 +14,27 @@ GeoBox is a **multi-agent system** built on Microsoft Agent Framework and Model 
             │ Webhook Event                   ▲ Box Metadata API
             ↓                                 │ (write GPS + geo)
 ┌───────────────────────────────────────────────────────────────────┐
-│       Azure Container App: GeoBox Orchestrator (geobox-app-dev)  │
+│       Azure Container App: GeoBox Orchestrator (geobox-app-dev)   │
 │                                                                   │
-│  ┌─────────────────────────────────────────────────────────────┐ │
-│  │ FastAPI Webhook Handler (main.py)                           │ │
-│  │ - POST /webhook/box  — receive Box events                   │ │
-│  │ - GET /health         — health check                        │ │
-│  │ - GET /stats          — processing statistics               │ │
-│  │ - GET /debug/orchestrator — debug state                     │ │
-│  └────────────────────┬────────────────────────────────────────┘ │
-│                       │                                          │
-│  ┌────────────────────▼────────────────────────────────────────┐ │
-│  │ GeoBox Orchestrator Agent (orchestrator_agent.py)           │ │
-│  │ Microsoft Agent Framework + Azure OpenAI GPT-4o             │ │
-│  │ - Agent-driven workflow decisions                           │ │
-│  │ - Calls MCP tools for GPS extraction                        │ │
-│  │ - Calls Geo MCP for reverse geocoding + elevation           │ │
-│  │ - Validates GPS coordinates                                 │ │
-│  │ - Writes metadata to Box                                    │ │
-│  └─────┬──────────────────────────────────┬────────────────────┘ │
-│        │                                  │                      │
-└────────┼──────────────────────────────────┼──────────────────────┘
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ FastAPI Webhook Handler (main.py)                           │  │
+│  │ - POST /webhook/box  — receive Box events                   │  │
+│  │ - GET /health         — health check                        │  │
+│  │ - GET /stats          — processing statistics               │  │
+│  │ - GET /debug/orchestrator — debug state                     │  │
+│  └────────────────────┬────────────────────────────────────────┘  │
+│                       │                                           │
+│  ┌────────────────────▼────────────────────────────────────────┐  │
+│  │ GeoBox Orchestrator Agent (orchestrator_agent.py)           │  │
+│  │ Microsoft Agent Framework + Azure OpenAI GPT-4o             │  │
+│  │ - Agent-driven workflow decisions                           │  │
+│  │ - Calls MCP tools for GPS extraction                        │  │
+│  │ - Calls Geo MCP for reverse geocoding + elevation           │  │
+│  │ - Validates GPS coordinates                                 │  │
+│  │ - Writes metadata to Box                                    │  │
+│  └─────┬──────────────────────────────────┬────────────────────┘  │
+│        │                                  │                       │
+└────────┼──────────────────────────────────┼───────────────────────┘
          │ MCP /sse                         │ httpx (REST)
          │ (MCPStreamableHTTPTool)          │
          │ Internal network                 │ Internal network
@@ -43,16 +43,16 @@ GeoBox is a **multi-agent system** built on Microsoft Agent Framework and Model 
 │ Azure Container App:     │   │ Azure Container App:             │
 │ ExifTool MCP Server      │   │ Geo MCP Server                   │
 │ (geobox-mcp-exiftool-dev)│   │ (geobox-mcp-geo-dev)             │
-│                          │   │                                   │
-│ MCP Tools:               │   │ REST Endpoints:                   │
-│ - extract_gps            │   │ - reverse_geocode(lat,lon)        │
-│ - extract_all_metadata   │   │   → Nominatim (OpenStreetMap)     │
-│ - generate_gpx_track     │   │ - get_elevation(lat,lon)          │
-│ - get_exiftool_version   │   │   → Open-Elevation API            │
-│                          │   │                                   │
+│                          │   │                                  │
+│ MCP Tools:               │   │ REST Endpoints:                  │
+│ - extract_gps            │   │ - reverse_geocode(lat,lon)       │
+│ - extract_all_metadata   │   │   → Nominatim (OpenStreetMap)    │
+│ - generate_gpx_track     │   │ - get_elevation(lat,lon)         │
+│ - get_exiftool_version   │   │   → Open-Elevation API           │
+│                          │   │                                  │
 │ ┌──────────────────────┐ │   └──────────────────────────────────┘
-│ │ ExifTool CLI          │ │
-│ │ (subprocess)          │ │
+│ │ ExifTool CLI         │ │
+│ │ (subprocess)         │ │
 │ └──────────────────────┘ │
 └──────────────────────────┘
 
